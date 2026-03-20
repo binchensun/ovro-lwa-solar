@@ -7,6 +7,44 @@ import logging, glob
 from .primary_beam import jones_beam as beam 
 from astropy.coordinates import get_sun, EarthLocation,SkyCoord, AltAz
 
+slow_ant_lst =    ['LWA266', 'LWA259', 'LWA268', 'LWA267', 'LWA271', 'LWA269', 'LWA276', 'LWA273', 'LWA278', 'LWA277', 'LWA282', 
+                   'LWA281', 'LWA307', 'LWA285', 'LWA309', 'LWA308', 'LWA311', 'LWA310', 'LWA313', 'LWA312', 'LWA321', 'LWA314', 
+                   'LWA330', 'LWA327', 'LWA338', 'LWA332', 'LWA340', 'LWA339', 'LWA352', 'LWA341', 'LWA362', 'LWA353', 'LWA257', 
+                   'LWA255', 'LWA260', 'LWA258', 'LWA265', 'LWA263', 'LWA272', 'LWA270', 'LWA283', 'LWA280', 'LWA288', 'LWA284', 
+                   'LWA292', 'LWA291', 'LWA296', 'LWA295', 'LWA301', 'LWA298', 'LWA305', 'LWA303', 'LWA317', 'LWA306', 'LWA320', 
+                   'LWA318', 'LWA336', 'LWA335', 'LWA343', 'LWA337', 'LWA351', 'LWA344', 'LWA360', 'LWA354', 'LWA002', 'LWA001', 
+                   'LWA004', 'LWA003', 'LWA006', 'LWA005', 'LWA009', 'LWA007', 'LWA011', 'LWA010', 'LWA012', 'LWA008', 'LWA040', 
+                   'LWA038', 'LWA042', 'LWA041', 'LWA044', 'LWA043', 'LWA046', 'LWA045', 'LWA071', 'LWA047', 'LWA074', 'LWA073', 
+                   'LWA077', 'LWA075', 'LWA275', 'LWA274', 'LWA302', 'LWA286', 'LWA363', 'LWA323', 'LWA013', 'LWA016', 'LWA015', 
+                   'LWA014', 'LWA018', 'LWA017', 'LWA020', 'LWA019', 'LWA022', 'LWA021', 'LWA024', 'LWA023', 'LWA026', 'LWA025', 
+                   'LWA029', 'LWA027', 'LWA049', 'LWA048', 'LWA051', 'LWA050', 'LWA053', 'LWA052', 'LWA054', 'LWA080', 'LWA084', 
+                   'LWA055', 'LWA324', 'LWA262', 'LWA348', 'LWA331', 'LWA365', 'LWA364', 'LWA030', 'LWA028', 'LWA032', 'LWA031', 
+                   'LWA063', 'LWA060', 'LWA057', 'LWA056', 'LWA059', 'LWA058', 'LWA062', 'LWA061', 'LWA085', 'LWA064', 'LWA087', 
+                   'LWA086', 'LWA089', 'LWA096', 'LWA091', 'LWA090', 'LWA093', 'LWA092', 'LWA095', 'LWA094', 'LWA122', 'LWA121', 
+                   'LWA325', 'LWA316', 'LWA334', 'LWA328', 'LWA361', 'LWA358', 'LWA035', 'LWA033', 'LWA034', 'LWA036', 'LWA066', 
+                   'LWA065', 'LWA068', 'LWA067', 'LWA070', 'LWA069', 'LWA097', 'LWA072', 'LWA099', 'LWA098', 'LWA101', 'LWA100', 
+                   'LWA103', 'LWA102', 'LWA105', 'LWA104', 'LWA129', 'LWA037', 'LWA131', 'LWA130', 'LWA134', 'LWA132', 'LWA252', 
+                   'LWA139', 'LWA294', 'LWA289', 'LWA319', 'LWA299', 'LWA078', 'LWA076', 'LWA081', 'LWA079', 'LWA108', 'LWA107', 
+                   'LWA110', 'LWA109', 'LWA112', 'LWA111', 'LWA114', 'LWA113', 'LWA116', 'LWA115', 'LWA118', 'LWA117', 'LWA120', 
+                   'LWA082', 'LWA143', 'LWA142', 'LWA145', 'LWA144', 'LWA147', 'LWA150', 'LWA149', 'LWA148', 'LWA151', 'LWA172', 
+                   'LWA279', 'LWA178', 'LWA355', 'LWA287', 'LWA124', 'LWA127', 'LWA126', 'LWA125', 'LWA188', 'LWA128', 'LWA153', 
+                   'LWA181', 'LWA155', 'LWA154', 'LWA157', 'LWA156', 'LWA159', 'LWA158', 'LWA182', 'LWA160', 'LWA185', 'LWA184', 
+                   'LWA187', 'LWA186', 'LWA190', 'LWA189', 'LWA191', 'LWA192', 'LWA224', 'LWA222', 'LWA326', 'LWA322', 'LWA345', 
+                   'LWA333', 'LWA359', 'LWA347', 'LWA135', 'LWA133', 'LWA137', 'LWA136', 'LWA140', 'LWA138', 'LWA161', 'LWA141', 
+                   'LWA163', 'LWA162', 'LWA165', 'LWA164', 'LWA167', 'LWA166', 'LWA193', 'LWA198', 'LWA195', 'LWA194', 'LWA197', 
+                   'LWA196', 'LWA200', 'LWA199', 'LWA202', 'LWA201', 'LWA227', 'LWA225', 'LWA349', 'LWA253', 'LWA293', 'LWA290', 
+                   'LWA357', 'LWA329', 'LWA170', 'LWA234', 'LWA173', 'LWA171', 'LWA169', 'LWA175', 'LWA204', 'LWA203', 'LWA206', 
+                   'LWA205', 'LWA208', 'LWA207', 'LWA210', 'LWA209', 'LWA228', 'LWA230', 'LWA226', 'LWA229', 'LWA233', 'LWA232', 
+                   'LWA236', 'LWA235', 'LWA238', 'LWA237', 'LWA240', 'LWA239', 'LWA297', 'LWA254', 'LWA346', 'LWA342', 'LWA356', 
+                   'LWA350', 'LWA177', 'LWA247', 'LWA180', 'LWA179', 'LWA183', 'LWA176', 'LWA212', 'LWA211', 'LWA214', 'LWA213', 
+                   'LWA243', 'LWA215', 'LWA218', 'LWA217', 'LWA221', 'LWA219', 'LWA241', 'LWA223', 'LWA244', 'LWA242', 'LWA246', 
+                   'LWA245', 'LWA249', 'LWA248', 'LWA251', 'LWA250', 'LWA261', 'LWA256', 'LWA300', 'LWA264', 'LWA315', 'LWA304']
+
+
+exp_ant_ids = np.array([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,90,91,92,93,94,95,122,123,124,125,126,127,154,155,156,157,158,159,186,188,189,190,191,220,222,223,250,251,252,253,254,255,282,283,284,285,286,287,314,315,316,317,318,319,346,347,348,349,350,351])
+core_ant_ids = np.array([64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,187,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,221,224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,240,241,242,243,244,245,246,247,248,249,256,257,258,259,260,261,262,263,264,265,266,267,268,269,270,271,272,273,274,275,276,277,278,279,280,281,288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,303,304,305,306,307,308,309,310,311,312,313,320,321,322,323,324,325,326,327,328,329,330,331,332,333,334,335,336,337,338,339,340,341,342,343,344,345])
+
+
 def get_sun_pos(msfile, str_output=True):
     """
     Return J2000 RA and DEC coordinates of the solar disk center
@@ -420,7 +458,7 @@ def check_corrected_data_present(msname):
     return False
 
 def correct_primary_beam_leakage_from_I(imagename,pol='I,Q,U,V',\
-                                            beam_file_path='/lustre/msurajit/beam_model_nivedita/OVRO-LWA_soil_pt.h5'):
+                                            beam_file_path='/lustre/msurajit/beam_model_nivedita/OVRO-LWA_MROsoil_updatedheight.h5'):
     '''
     This function corrects the instrumental polarization due to the I.
     It implements the following correction:
@@ -587,6 +625,86 @@ def correct_primary_beam_self_terms(imagename, pol='I',fast_vis=False):
                 hdu.flush()
                 hdu.close()
     return
+
+def correct_primary_beam(imagename,pol='I,Q,U,V',\
+                        beam_file_path='/lustre/msurajit/beam_model_nivedita/OVRO-LWA_MROsoil_updatedheight.h5',\
+                        inverse=True, leakage_correction_terms=None,\
+                        muller_matrix = None):
+    '''
+    This function corrects for the full Muller Matrix
+    
+    Can handle multiple images in a list. If single image, we can add -image.fits
+    However, if a list is provided, supply full names.
+    If inverse is True, we multiply inverse
+    of Muller Matrix to the observed data. If inverse is False, we multiple the
+    Muller Matrix to the data. If leakage_correction_terms is a list or an array,
+    we add them to the M10, M20, M30. These correction terms are in fraction of
+    I. To ensure we do not compute repeatedly the same Muller Matrix, there is
+    a option to provide the Muller matrix.
+    '''
+    if type(imagename) is str:
+        if os.path.isfile(imagename+"-image.fits"):
+            imagename=[imagename+"-image.fits"]
+        elif os.path.isfile(imagename):
+            imagename=[imagename]
+        else:
+            raise RuntimeError("Image supplied is not found")
+    
+
+    if not type(muller_matrix)==np.ndarray:
+        muller_matrix=determine_muller_matrix_for_image(imagename[0],beam_file_path=beam_file_path)
+    
+    if type(leakage_correction_terms)==list or type(leakage_correction_terms)==np.ndarray:
+        leakage_correction_terms=np.array(leakage_correction_terms)
+        muller_matrix[1:,0]=leakage_correction_terms[1:]*muller_matrix[0,0]
+    
+    if not inverse:
+        inverse_muller=muller_matrix
+    else:
+        if pol!='I':
+            det_muller=np.linalg.det(muller_matrix)
+            if det_muller<1e-5:
+                inverse_muller=np.zeros_like(muller_matrix)
+                logging.warning("Muller matrix is not invertible. Setting inverse to 0.")
+            else:
+                inverse_muller=np.linalg.inv(muller_matrix)
+        else:
+            inverse_muller=muller_matrix
+            inverse_muller[0,0]=1/muller_matrix[0,0]  
+            ### only this term is used. No need to compute all terms
+    
+    
+    
+    muller_matrix_order={'I':0,'Q':1,'U':2,'V':3}
+    
+    for img in imagename:
+        with fits.open(img,mode='update') as hdu:
+            head=hdu[0].header
+            
+            if pol=='I':
+                hdu[0].data[j,...]*=inverse_muller[0,0]
+            else:
+                stokes_order=head['polorder']
+                
+                pols=stokes_order.split(',')
+                
+                
+                for j,pol in enumerate(pols):
+                    if j==0:
+                        shape=hdu[0].data[0,...].shape
+                        stokes_data={'I':np.zeros(shape),'Q':np.zeros(shape),'U':np.zeros(shape),\
+                                        'V':np.zeros(shape)}
+                    stokes_data[pol]=np.array(hdu[0].data[j,...])
+                    
+                for j,pol in enumerate(pols):
+                    inverse_muller_pol=inverse_muller[muller_matrix_order[pol]]                            
+                    hdu[0].data[j,...]=stokes_data['I']*inverse_muller_pol[0]+\
+                                        stokes_data['Q']*inverse_muller_pol[1]+\
+                                        stokes_data['U']*inverse_muller_pol[2]+\
+                                        stokes_data['V']*inverse_muller_pol[3]
+                hdu[0].header['CMMULL']=True  ### Correct_Model_MULLer
+             
+            hdu.flush()
 
 def get_solar_loc_pix(msfile, image="allsky"):
     """
@@ -813,7 +931,11 @@ def compress_fits_to_h5(fits_file, hdf5_file, beam_ratio=3.0, smaller_than_src =
 
     # to be more robust, if beam smaller than theoretical beam, use theoretical beam
     freqs =  hdul[1].data['cfreqs']
-    thresh_arr = np.copy( hdul[1].data['bmin']*3600)
+    head_tb=hdul[1].header
+    
+    bmin=head_tb['TTYPE4'] ### maybe bmin or cbmin
+    
+    thresh_arr = np.copy( hdul[1].data[bmin]*3600)
     if theoretical_beam_thresh:
         beam_size_thresh = (3e8 / freqs) / longest_baseline / np.pi * 180 * 3600 # arcsec
         for i in range(len(thresh_arr)):
@@ -892,7 +1014,7 @@ def recover_fits_from_h5(hdf5_file, fits_out=None, return_data=False, return_met
                 if tmp_small.shape[0] == 1:
                     recover_data[pol, ch_idx, :, :] = tmp_small[0, 0]
                 else:
-                    recover_data[pol, ch_idx, :, :] = zoom(tmp_small, datashape[-1] / tmp_small.shape[-1], order=5,prefilter=False)
+                    recover_data[pol, ch_idx, :, :] = zoom(tmp_small, datashape[-1] / tmp_small.shape[-1], order=3,prefilter=False)
 
         if return_data:
             return meta, recover_data
@@ -903,7 +1025,7 @@ def recover_fits_from_h5(hdf5_file, fits_out=None, return_data=False, return_met
 
 
 def check_h5_fits_consistency(fits_file, hdf5_file=None, ignore_corrupted=False, work_dir='./',
-                              tolerance=1e-3, ignore_ratio=2):
+                              tolerance=1e-3, ignore_ratio=2, auto_tol=True):
     """
     Check the consistency between a fits file and a hdf5 file,
     if there is a hdf5 file, then compare the two files
@@ -916,7 +1038,7 @@ def check_h5_fits_consistency(fits_file, hdf5_file=None, ignore_corrupted=False,
     import h5py
     hdf5_file = hdf5_file if hdf5_file is not None else fits_file.replace('.fits', '.hdf')
 
-    pass_check = True
+    pass_check = 0
     try:
         recover_fits_from_h5(hdf5_file, fits_out=work_dir+'tmp.fits')
         hdu_tmp = fits.open(work_dir+'tmp.fits')
@@ -943,13 +1065,21 @@ def check_h5_fits_consistency(fits_file, hdf5_file=None, ignore_corrupted=False,
                     continue
                 else:
                     checked_items += 1
+                    if auto_tol:
+                        # relative max negative value in the data
+                        tolerance = -np.min(data[0,ch_idx,:,:]) / np.max(np.abs(data[0,ch_idx,:,:])) / 3
+                        # 1/3 of SNR
                     if np.mean(np.abs(data[pol,ch_idx,:,:] - data_tmp[pol,ch_idx,:,:])
                                )/np.max(np.abs(data[pol,ch_idx,:,:])) > tolerance:
-                        logging.warning(f'Pol {pol} Ch {ch_idx} not consistent')
-                        pass_check = 3
+                        logging.warning(f'Pol {pol} Ch {ch_idx} not consistent'+'. Difference: ' +
+                                        str(np.mean(np.abs(data[pol,ch_idx,:,:] - data_tmp[pol,ch_idx,:,:])
+                                        )/np.max(np.abs(data[pol,ch_idx,:,:])))+" for Tol: " + str(tolerance))
+                        pass_check = 4
                         break
         logging.info(f'Checked {checked_items} items in the fits file')
     except:
+        pass_check = -1
+        logging.error(f'Error in checking the consistency between {fits_file} and {hdf5_file}')
         pass
 
     # clean up
@@ -975,18 +1105,17 @@ def manual_split_corrected_ms(vis, outputvis, datacolumn='CORRECTED_DATA'):
         try:
             corrected_data = tb.getcol('CORRECTED_DATA')
             tb.putcol('DATA', corrected_data)
-            tb.flush()
+            #tb.flush()  # tb.close automatically invokes flush
+            tb.close()
         except Exception as e:
             logging.debug("Hand split method did not work")
             raise e
-        finally:
-            tb.close()
 
     os.system("mv " + vis + " " + outputvis)
     return outputvis
 
 def get_primary_beam_single_source(alt,az,freq,\
-                                    model_beam_file='/lustre/msurajit/beam_model_nivedita/OVRO-LWA_soil_pt.h5'):
+                                    model_beam_file='/lustre/msurajit/beam_model_nivedita/OVRO-LWA_MROsoil_updatedheight.h5'):
     '''
     This is a utility function which returns the normalised beam factors for a single source.
     :param alt: altitude in degrees. float
@@ -1004,6 +1133,15 @@ def get_primary_beam_single_source(alt,az,freq,\
     factors[2]=pol_fac[2,0].real ### leakage from I to U due to primary_beam
     factors[3]=pol_fac[3,0].real ### leakage from I to V due to primary_beam
     return factors
+
+def get_caltable_freq(caltable):
+    tb=table()
+    tb.open(os.path.join(caltable,"SPECTRAL_WINDOW"))
+    try:
+        chan_freq=tb.getcol('CHAN_FREQ').flatten()
+    finally:
+        tb.close()
+    return chan_freq
     
 def fix_polarised_beam_effect_on_gains(caltable):
     '''
